@@ -1,9 +1,5 @@
 package blockui
 
-import (
-	"fmt"
-)
-
 type SectionAccessory interface {
 	HasInteraction() bool
 	IsImage() bool
@@ -11,54 +7,59 @@ type SectionAccessory interface {
 	SetValue(string)
 }
 
-// SlackBlockSection represents a section Block Kit UI element
-type SlackBlockSection struct {
-	Type      string            `json:"type"`
-	Text      TitleText         `json:"text,omitempty"`
-	Accessory SectionAccessory  `json:"accessory,omitempty"`
-	Fields    []*BlockTitleText `json:"fields,omitempty"`
+// BlockSection represents a section Block Kit UI element
+type BlockSection struct {
+	Type      string                   `json:"type"`
+	Text      *BlockTitleTextEmojiless `json:"text,omitempty"`
+	Accessory SectionAccessory         `json:"accessory,omitempty"`
+	Fields    []*BlockTitleText        `json:"fields,omitempty"`
 }
 
 // GetType implements SlackBlock interface
-func (s SlackBlockSection) GetType() string {
+func (s BlockSection) GetType() string {
 	return s.Type
 }
 
 // SetText sets the Text field as appropriate depending on if the section has an accessory or not
-func (s *SlackBlockSection) SetText(textType string, textVal string) {
-	var tt TitleText
-	if s.HasAccessory() {
-		tt = NewBlockTitleTextEmojiless(textType)
-	} else {
-		tt = NewBlockTitleText(textType)
-	}
-	tt.SetText(textVal)
-	s.Text = tt
+func (s *BlockSection) SetText(textType string, textVal string) {
+	s.Text = NewBlockTitleTextEmojiless(textType)
+	s.Text.SetText(textVal)
 }
 
-func (s SlackBlockSection) HasAccessory() bool {
+func (s BlockSection) HasAccessory() bool {
 	return s.Fields != nil || s.Accessory != nil
 }
 
-// NewSlackBlockSection creates a new empty section UI element
-func NewSlackBlockSection() *SlackBlockSection {
-	return &SlackBlockSection{
+// SetAccessory sets the accessory
+func (s *BlockSection) SetAccessory(a SectionAccessory) {
+	s.Accessory = a
+}
+
+// NewBlockSection creates a new empty section UI element
+func NewBlockSection() *BlockSection {
+	return &BlockSection{
 		Type: slackBlockSectionType,
 	}
 }
 
-// NewSlackBlockSectionWithAccessory creates a new Block Kit section UI element with provided accesssory type
-func NewSlackBlockSectionWithAccessory(accessoryType string) (*SlackBlockSection, error) {
-	err := fmt.Errorf("NewSlackBlockSectionWithAccessory requires a valid accessory type")
-	if accessoryType == "" {
-		return nil, err
-	}
-	s := NewSlackBlockSection()
+// NewBlockSectionWithAccessory creates a new Block Kit section UI element with provided accesssory type
+func NewBlockSectionWithAccessory(a SectionAccessory) *BlockSection {
+	s := NewBlockSection()
+	s.SetAccessory(a)
+	return s
+}
 
-	switch accessoryType {
-	case slackAccessoryButtonType:
-		s.Accessory = NewBlockButton()
-	}
+// NewBlockSectionWithImage creates a new Block Kit section UI element with image accessory
+func NewBlockSectionWithImage(i *BlockAccessoryImage) *BlockSection {
+	return NewBlockSectionWithAccessory(i)
+}
 
-	return s, nil
+// NewBlockSectionWithButton creates a new Block Kit section UI element with button accessory
+func NewBlockSectionWithButton(b *BlockButton) *BlockSection {
+	return NewBlockSectionWithAccessory(b)
+}
+
+// NewBlockSectionWithSelect creates a new Block Kit section UI element with select accessory
+func NewBlockSectionWithSelect(s *BlockSelect) *BlockSection {
+	return NewBlockSectionWithAccessory(s)
 }

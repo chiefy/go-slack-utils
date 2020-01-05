@@ -31,18 +31,19 @@ func TestButtonAccessory(t *testing.T) {
 	assert := assert.New(t)
 	b := NewSlackBlocks()
 
-	s, _ := NewSlackBlockSectionWithAccessory(slackAccessoryButtonType)
-	s.SetText(
-		slackTextMarkdown,
-		"You can add a button alongside text in your message. ",
-	)
+	button := NewBlockButton()
+	button.SetValue("click_me_123")
 
 	tt := NewBlockTitleText(slackTextPlainText)
 	tt.Text = "Button"
 	tt.Emoji = true
+	button.SetText(tt)
 
-	s.Accessory.SetText(tt)
-	s.Accessory.SetValue("click_me_123")
+	s := NewBlockSectionWithButton(button)
+	s.SetText(
+		slackTextMarkdown,
+		"You can add a button alongside text in your message. ",
+	)
 	b.Push(s)
 
 	j, err := json.MarshalIndent(b, "", "\t")

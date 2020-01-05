@@ -12,8 +12,7 @@ var basicSection = json.RawMessage(`{
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "This is a mrkdwn section block :ghost: *this is bold*, and ~this is crossed out~",
-				"emoji": false
+				"text": "This is a mrkdwn section block :ghost: *this is bold*, and ~this is crossed out~"
 			}
 		}
 	]
@@ -22,7 +21,7 @@ var basicSection = json.RawMessage(`{
 func TestSectionBlock(t *testing.T) {
 	assert := assert.New(t)
 	b := &SlackBlocks{}
-	s := NewSlackBlockSection()
+	s := NewBlockSection()
 	s.SetText(
 		"mrkdwn",
 		"This is a mrkdwn section block :ghost: *this is bold*, and ~this is crossed out~",
