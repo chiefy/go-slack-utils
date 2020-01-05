@@ -3,7 +3,6 @@ package payload
 import (
 	"encoding/json"
 	"github.com/chiefy/go-slack-utils/pkg/blockui"
-	"log"
 )
 
 // BlockActionsContainer is the payload which comes from a Block Kit UI interaction
@@ -80,8 +79,6 @@ func (b *BlockActionsPayload) UnmarshalJSON(data []byte) error {
 				}
 
 				b.Actions = append(b.Actions, action)
-				log.Println(b.Actions)
-
 			}
 		}
 	} else {
