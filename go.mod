@@ -1,4 +1,4 @@
-module github.com/chiefy/go-slack-utils/v1
+module github.com/chiefy/go-slack-utils
 
 go 1.18
 
